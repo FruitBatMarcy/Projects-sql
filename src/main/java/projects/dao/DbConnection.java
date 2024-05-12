@@ -17,15 +17,15 @@ public class DbConnection {
 	
 	/**
 	 * 
-	 * @return
-	 * @throws DbException
+	 * @return Connection to the projects database
+	 * @throws DbException If unable to connect to the database
 	 */
-	public Connection getConnection() throws DbException{
+	public static Connection getConnection() throws DbException{
 		String url = 
 				String.format("jdbc:mysql://%s:%d/%s?user=%s&password=%s&useSSL=false", 
 						HOST,PORT,SCHEMA,USER,PASSWORD);
 		
-		System.out.println("Connecting to " + url);
+		System.out.println("Connecting to " + SCHEMA);
 		
 		try {
 			Connection conn = DriverManager.getConnection(url);
