@@ -12,21 +12,23 @@ import projects.service.ProjectService;
 
 public class ProjectsApp {
 	private ProjectService projectService = new ProjectService();
+	private Project curProject;
 	
 	//@formatter:off
 	private List<String> operations = List.of( //List of operations user can perform
-			"1) Add a project"
+			"1) Add a project",
+			"2) List Projects",
+			"3) Select a project"
 			);
 	//@formatter:on
 	
 	private Scanner scanner = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		 DbConnection conn = new DbConnection();
 		 new ProjectsApp().processUserSelections();
 		 
 		 
-		 System.out.println("goodbye");
+		 System.out.println("\nExiting, goodbye!");
 	}
 	
 	/*
@@ -43,6 +45,12 @@ public class ProjectsApp {
 				case 1:
 					addProject();
 					break;
+				case 2:
+					listProjects();
+					break;
+				case 3:
+					selectProject();
+					break;
 				case -1:
 					done = quitMenu();
 					break;
@@ -56,6 +64,27 @@ public class ProjectsApp {
 		}
 	}
 
+	private void selectProject() {
+		listProjects();
+		Integer projId = getIntInput("Enter the project ID to select a project");
+		
+		curProject = null;
+		
+		curProject = projectService.fetchProjectById(projId);
+		
+	}
+
+	private void listProjects() {
+		List<Project> projects = projectService.fetchAllProjects();
+		
+		System.out.println("\nProjects:");
+		projects.forEach(project -> System.out.println("   " + project.getProjectId() + ": " + project.getProjectName()));
+		
+	}
+	
+	/*
+	 * prompts user for all data of a  project
+	 */
 	private void addProject() {
 		String projectName = getStringInput("Enter the project name");
 		BigDecimal estimatedHours = getDecimalInput("Enter the estimated hours");
@@ -75,7 +104,10 @@ public class ProjectsApp {
 		System.out.println("You have succesfully created project: " + sucsess.toString());
 		
 	}
-
+	
+	/*
+	 * gets decimal input from user
+	 */
 	private BigDecimal getDecimalInput(String message) {
 		String input = getStringInput(message);
 		if(Objects.isNull(input)) {
@@ -136,5 +168,22 @@ public class ProjectsApp {
 		System.out.println("\nThese are the avalilable selections. Press the Enter key to quit");
 		operations.forEach(line -> System.out.println("  " + line));
 		
+		if(Objects.isNull(curProject)) {
+			System.out.println("\nYou are not working with a project");
+		}
+		else {
+			System.out.println("\nYou are working with project : " + curProject);
+		}
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
